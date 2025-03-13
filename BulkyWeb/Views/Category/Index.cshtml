@@ -1,3 +1,27 @@
-﻿<h1>    
+﻿@model List<Category>
+<h1>    
     Category List
 </h1>
+<thead>
+    <table class= "table table-bordered table-striped">
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Display Order
+            </th>
+        </tr>
+</thead>
+<tbody>
+    @foreach (var obj in Model)
+    {
+        <tr>
+            <td> Name</td>
+            <td>Display Order</td>
+        </tr>
+    }
+</tbody>
+</table>
+
+
