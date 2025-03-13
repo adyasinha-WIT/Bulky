@@ -14,11 +14,11 @@
         </tr>
 </thead>
 <tbody>
-    @foreach (var obj in Model)
+    @foreach (var obj in Model.OrderBy(u=>u.DisplayOrder))
     {
         <tr>
-            <td> Name</td>
-            <td>Display Order</td>
+            <td> @obj.Name</td>
+            <td> @obj.DisplayOrder</td>
         </tr>
     }
 </tbody>
