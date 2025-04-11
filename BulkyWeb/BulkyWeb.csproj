@@ -21,4 +21,8 @@
     <ProjectReference Include="..\SD7501Bulky.Models\Bulky.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
