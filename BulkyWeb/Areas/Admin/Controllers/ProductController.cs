@@ -4,6 +4,10 @@ using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Bulky.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using Bulky.Models.ViewModels;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
@@ -12,46 +16,91 @@ namespace BulkyWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webhostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webhostEnvironment )
         {
             _unitOfWork = unitOfWork;
+            _webhostEnvironment = webhostEnvironment;
         }
         public IActionResult Index()
         {
             List<Product> objProductList = _unitOfWork.Product.GetAll().ToList();
             return View(objProductList);
         }
-        public IActionResult Create()
+        // GET Action
+    public IActionResult Upsert(int? id)
         {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create(Product obj)
-        {
-
-            if (ModelState.IsValid)
+            ProductVM productVM = new()
             {
-                _unitOfWork.Product.Add(obj);
-                _unitOfWork.Save();
-                TempData["message"] = "Product created successfully!!";
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
-
-        //EDIT BUTTON
-        public IActionResult Edit(int? id)
-        {
+                CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                Product = new Product()
+            };
             if (id == null || id == 0)
             {
-                return NotFound();
+                // Create Product
+                return View(productVM);
             }
-            Product? productFromDb = _unitOfWork.Product.Get(u=>u.Id ==id);
-            if (productFromDb == null)
+            else
             {
-                return NotFound();
+                // Update Product
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(productVM);
             }
-            return View(productFromDb);
+        }
+
+        [HttpPost]
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
+        {
+            if (ModelState.IsValid)
+            {
+                if (productVM.Product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(productVM.Product);
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(productVM.Product);
+                }
+                _unitOfWork.Save();
+                TempData["success"] = "Product created successfully!!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // Repopulate dropdown on validation error
+                productVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                return View(productVM);
+            }
+        }
+
+        // POST Action
+        [HttpPost]
+        public IActionResult Create(ProductVM productVM)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Product.Add(productVM.Product);
+                _unitOfWork.Save();
+                TempData["success"] = "Product created successfully!!";
+                return RedirectToAction("Index");
+            }
+            else
+                // Repopulate dropdown on validation error
+                productVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+
+            return View(productVM);
         }
 
         [HttpPost]
