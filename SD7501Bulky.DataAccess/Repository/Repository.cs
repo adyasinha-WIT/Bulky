@@ -14,12 +14,16 @@ namespace Bulky.DataAccess.Repository
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
+
         public Repository(ApplicationDbContext db)
         {
             _db = db;
             this.dbSet = _db.Set<T>();
             _db.Products.Include(u => u.Category).Include(u => u.CategoryId);
+
+
         }
+
         void IRepository<T>.Add(T entity)
         {
             dbSet.Add(entity);
