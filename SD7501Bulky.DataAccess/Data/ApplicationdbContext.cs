@@ -25,7 +25,6 @@ namespace BulkyWeb.Data
                 );
 
 
-
             modelBuilder.Entity<Product>().HasData(
                new Product
                {
