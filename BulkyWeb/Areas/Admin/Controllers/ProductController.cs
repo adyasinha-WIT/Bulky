@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    //[Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -137,35 +137,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
             return View();
         }
-
-        //DELETE BUTTON
-        //public IActionResult Delete(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-        //    if (productFromDb == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(productFromDb);
-        //}
-
-        //[HttpPost, ActionName("Delete")]
-        //public IActionResult DeletePOST(int? id)
-        //{
-        //    Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
-        //    if (obj == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _unitOfWork.Product.Remove(obj);
-        //    _unitOfWork.Save();
-        //    TempData["message"] = "Product deleted successfully!!";
-        //    return RedirectToAction("Index");
-        //}
 
         #region API calls
         public IActionResult GetAll()
