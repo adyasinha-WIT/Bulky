@@ -27,6 +27,8 @@ namespace Bulky.DataAccess.Repository
             Company = new CompanyRepository(_db);
             ShoppingCart = new ShoppingCartRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
+            OrderHeader = new OrderHeaderRepository(_db);
+            OrderDetail = new OrderDetailRepository(_db);
         }
 
         public void Save()
