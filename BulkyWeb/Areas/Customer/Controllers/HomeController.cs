@@ -63,7 +63,7 @@ namespace BulkyWeb.Areas.Customer.Controllers;
             _unitOfWork.ShoppingCart.Add(shoppingCart);
             _unitOfWork.Save();
         }
-        TempData["success"] = "Shopping cart created successfully";
+        TempData["message"] = "Shopping cart created successfully";
 
         return RedirectToAction(nameof(Index));
     }
